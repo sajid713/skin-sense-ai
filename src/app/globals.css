@@ -1,0 +1,132 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+    /* --- Brand Colors (Clinical Rose & Sense Indigo) --- */
+    --color-primary: oklch(0.577 0.245 27.325); /* Clinical Rose */
+    --color-primary-foreground: oklch(1 0 0);
+
+    --color-secondary: oklch(0.2077 0.0398 265.7549); /* Deep Sense Indigo */
+    --color-secondary-foreground: oklch(0.9299 0.0334 272.7879);
+
+    /* --- UI Base Colors --- */
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --color-card: var(--card);
+    --color-card-foreground: var(--card-foreground);
+    --color-popover: var(--popover);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-accent: var(--accent);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-destructive: oklch(0.6368 0.2078 25.3313);
+    --color-border: var(--border);
+    --color-input: var(--input);
+    --color-ring: var(--ring);
+
+    /* --- Typography --- */
+    --font-sans: Roboto, ui-sans-serif, system-ui;
+    --font-mono: Fira Code, monospace;
+    --font-serif: Playfair Display, serif;
+
+    --tracking-tighter: -0.05em;
+    --tracking-tight: -0.025em;
+    --tracking-wide: 0.025em;
+    --tracking-wider: 0.05em;
+    --tracking-widest: 0.1em;
+
+    /* --- Radii (Sleek Medical) --- */
+    --radius: 0.75rem;
+    --radius-sm: calc(var(--radius) - 4px);
+    --radius-md: calc(var(--radius) - 2px);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) + 4px);
+    --radius-2xl: 1.5rem;
+    --radius-3xl: 2.5rem;
+
+    /* --- Sensing Shadows (Rose/Indigo Blurs) --- */
+    --shadow-sm: 0 1px 2px 0 oklch(0 0 0 / 0.05);
+    --shadow:
+        0 4px 6px -1px oklch(0.577 0.245 27.325 / 0.1), 0 2px 4px -2px
+        oklch(0.577 0.245 27.325 / 0.1);
+    --shadow-md:
+        0 10px 15px -3px oklch(0.577 0.245 27.325 / 0.15), 0 4px 6px -4px
+        oklch(0.577 0.245 27.325 / 0.15);
+    --shadow-lg:
+        0 20px 25px -5px oklch(0.577 0.245 27.325 / 0.1), 0 8px 10px -6px
+        oklch(0.577 0.245 27.325 / 0.1);
+    --shadow-xl: 0 25px 50px -12px oklch(0.577 0.245 27.325 / 0.25);
+}
+
+:root {
+    /* Base Medical White */
+    --background: oklch(1 0 0);
+    --foreground: oklch(0.12 0.02 270);
+
+    --card: oklch(1 0 0);
+    --card-foreground: oklch(0.12 0.02 270);
+
+    --popover: oklch(1 0 0);
+    --popover-foreground: oklch(0.12 0.02 270);
+
+    /* Skin Sense Primary (Rose) */
+    --primary: oklch(0.577 0.245 27.325);
+    --primary-foreground: oklch(1 0 0);
+
+    /* Secondary (Soft Indigo) */
+    --secondary: oklch(0.96 0.01 270);
+    --secondary-foreground: oklch(0.2 0.05 270);
+
+    --muted: oklch(0.97 0.01 270);
+    --muted-foreground: oklch(0.45 0.03 270);
+
+    --accent: oklch(0.92 0.04 27.325); /* Light Rose Tint */
+    --accent-foreground: oklch(0.4 0.15 27.325);
+
+    --border: oklch(0.93 0.01 270);
+    --input: oklch(0.93 0.01 270);
+    --ring: oklch(0.577 0.245 27.325);
+
+    --radius: 0.75rem;
+}
+
+.dark {
+    /* Night Sense Mode */
+    --background: oklch(0.14 0.02 270);
+    --foreground: oklch(0.98 0.01 270);
+
+    --card: oklch(0.18 0.03 270);
+    --card-foreground: oklch(0.98 0.01 270);
+
+    --primary: oklch(0.65 0.22 27.325); /* Slightly brighter rose for dark mode */
+    --primary-foreground: oklch(1 0 0);
+
+    --muted: oklch(0.22 0.03 270);
+    --muted-foreground: oklch(0.7 0.02 270);
+
+    --border: oklch(0.25 0.03 270);
+    --accent: oklch(0.25 0.08 27.325);
+    --accent-foreground: oklch(0.9 0.05 27.325);
+}
+
+@layer base {
+    * {
+        @apply border-border outline-ring/50 transition-colors duration-200;
+    }
+    body {
+        @apply bg-background text-foreground antialiased;
+        font-feature-settings: "cv11", "ss01";
+    }
+    h1,
+    h2,
+    h3,
+    h4 {
+        @apply tracking-tighter font-bold;
+    }
+    button {
+        @apply cursor-pointer active:scale-95 transition-transform;
+    }
+}

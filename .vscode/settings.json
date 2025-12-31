@@ -1,0 +1,10 @@
+{
+    "editor.codeActionsOnSave": {
+        "source.addMissingImports.ts": "always",
+        "source.biome": "explicit",
+        "source.fixAll.biome": "always",
+        "source.organizeImports.biome": "always",
+        "source.removeUnusedImports": "always",
+        "source.sortImports": "always"
+    }
+}
