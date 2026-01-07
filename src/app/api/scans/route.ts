@@ -1,14 +1,13 @@
 import { db } from "@/db";
 import { scanSummary } from "@/db/schema";
 import { auth } from "@/lib/auth";
-import { hugging_client } from "@/lib/hugging_client";
 import { openrouter } from "@/lib/openrouter";
 import { supabaseServer } from "@/lib/supabase/server";
 import { type NextRequest, NextResponse } from "next/server";
 import { generateSlug } from "random-word-slugs";
 import { v4 as uuidv4 } from "uuid";
 
-const HF_INFERENCE_MODEL = process.env.HF_INFERENCE_MODEL;
+const FASTAPI_URL = process.env.FASTAPI_URL || "http://127.0.0.1:8000/predict";
 const OPENROUTER_MODEL = process.env.OPENROUTER_MODEL;
 const BUCKET_NAME = process.env.SUPABASE_BUCKET_NAME || "scans";
 
@@ -23,8 +22,7 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        const hasSubscription =
-            req.headers.get("x-has-subscription") === "true";
+        const hasSubscription = req.headers.get("x-has-subscription") === "true";
 
         const formData = await req.formData();
         const image = formData.get("image") as File | null;
@@ -36,18 +34,27 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        const output = await hugging_client.imageClassification({
-            data: image,
-            model: HF_INFERENCE_MODEL,
-            provider: "hf-inference",
+        const apiFormData = new FormData();
+        apiFormData.append("images", image);
+
+        const response = await fetch(FASTAPI_URL, {
+            method: "POST",
+            body: apiFormData,
         });
+
+        if (!response.ok) {
+            throw new Error(`FastAPI request failed: ${response.statusText}`);
+        }
+
+        const predictionResult = await response.json();
+        const classificationData = predictionResult.predictions[0];
 
         const explanation = await openrouter.chat.send({
             model: OPENROUTER_MODEL,
             messages: [
                 {
                     role: "user",
-                    content: `Analyze this image classification data and provide a concise medical-style summary. DATA: ${JSON.stringify(output)}`,
+                    content: `Analyze this image classification data and provide a concise medical-style summary. DATA: ${JSON.stringify(classificationData)}`,
                 },
             ],
         });
@@ -68,6 +75,7 @@ export async function POST(req: NextRequest) {
                     .upload(fileName, image);
 
             if (uploadError) throw uploadError;
+
             const slug = generateSlug(3, {
                 format: "title",
             });
